@@ -18,4 +18,5 @@ quantity = input(" How many would yu like?\n")
 total = price * int(quantity)
 
 print("well Thank YOU", name, "your total is $" + str(total))
+
 print('Have a blast', name, 'enjoy yur', order + 's.')
