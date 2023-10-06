@@ -1,22 +1,41 @@
 #bot name Bee
 #Bee @ yur service
+# Define menu items and their prices
+menu = {
+    "coffee": 5,
+    "burger": 10,
+    "sandwich": 7,
+    "cappuccino": 6,
+    "sausage": 8,
+}
 
-name = input('what is yur name?\n')
+# Initialize the total cost
+total = 0
 
-print('Hi,' + name, 'am Bee and welcome to coffers cafe.')
+# Welcome the customer
+name = input('What is your name?\n')
+print('Hi, ' + name + ', I am Bee, and welcome to Coffers Cafe.')
+print('Here is our menu:')
 
-menu = "coffee, burger, sandwich, capuccino, sausage"
+# Display the menu
+for item, price in menu.items():
+    print(f'{item.capitalize()}: ${price}')
 
-print('what would yu like to order ' + name, menu + '?')
+# Ask for orders
+while True:
+    order = input('What would you like to order from the menu (or type "done" to finish)?\n').lower()
 
-order = input()
+    if order == "done":
+        break
 
-price = 8
+    if order not in menu:
+        print("Sorry, we don't have that item on our menu.")
+        continue
 
-quantity = input(" How many would yu like?\n")
+    quantity = int(input(f"How many {order}s would you like?\n"))
+    total += menu[order] * quantity
 
-total = price * int(quantity)
+# Display the total cost
+print(f"Thank you, {name}! Your total is: ${total}")
+print(f"Have a blast, {name}, and enjoy your meal!")
 
-print("well Thank YOU", name, "your total is $" + str(total))
-
-print('Have a blast', name, 'enjoy yur', order + 's.')
