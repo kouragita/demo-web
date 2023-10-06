@@ -1,41 +1,43 @@
-#bot name Bee
-#Bee @ yur service
-# Define menu items and their prices
+# Bot name: Bee
+# Bee @ your service
+
+name = input('What is your name?\n')
+
+print('Hi, ' + name + ', I am Bee, and welcome to Coffers Cafe.')
+
 menu = {
-    "coffee": 5,
-    "burger": 10,
-    "sandwich": 7,
-    "cappuccino": 6,
-    "sausage": 8,
+    'coffee': 3,
+    'burger': 5,
+    'sandwich': 4,
+    'cappuccino': 4,
+    'sausage': 3,
 }
 
-# Initialize the total cost
-total = 0
+order_list = []
 
-# Welcome the customer
-name = input('What is your name?\n')
-print('Hi, ' + name + ', I am Bee, and welcome to Coffers Cafe.')
-print('Here is our menu:')
-
-# Display the menu
-for item, price in menu.items():
-    print(f'{item.capitalize()}: ${price}')
-
-# Ask for orders
 while True:
-    order = input('What would you like to order from the menu (or type "done" to finish)?\n').lower()
+    print('What would you like to order ' + name + '?')
+    print('Here is the menu:')
+    for item, price in menu.items():
+        print(f'{item}: ${price}')
 
-    if order == "done":
+    order = input()
+    if order in menu:
+        quantity = int(input('How many would you like?\n'))
+        order_list.append((order, quantity))
+    else:
+        print('Sorry, we do not have that item on the menu.')
+
+    another = input('Would you like to order another item? (yes/no)\n')
+    if another.lower() != 'yes':
         break
 
-    if order not in menu:
-        print("Sorry, we don't have that item on our menu.")
-        continue
+total = sum(price * quantity for order, quantity in order_list for item, price in menu.items() if item == order)
+print(f"Thank you, {name}! Here is your order:")
 
-    quantity = int(input(f"How many {order}s would you like?\n"))
-    total += menu[order] * quantity
+for order, quantity in order_list:
+    print(f"{quantity} x {order} = ${menu[order] * quantity}")
 
-# Display the total cost
-print(f"Thank you, {name}! Your total is: ${total}")
-print(f"Have a blast, {name}, and enjoy your meal!")
+print(f'Your total is ${total}.')
+print('Have a great time, ' + name + ', and enjoy your meal!')
 
