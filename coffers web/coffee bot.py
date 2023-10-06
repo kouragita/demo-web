@@ -1,5 +1,6 @@
-# Bot name: Bee
-# Bee @ your service
+# Bot name: BEE
+# BEE @ your service
+#BEE is in a competition with chunkz tag them for whom yu like most.
 
 name = input('What is your name?\n')
 
@@ -40,4 +41,4 @@ for order, quantity in order_list:
 
 print(f'Your total is ${total}.')
 print('Have a great time, ' + name + ', and enjoy your meal!')
-
+print('BEE is in a competition with chunkz tag them for whom yu like most. plz do leave a rate, that would really help.😊🥰')
