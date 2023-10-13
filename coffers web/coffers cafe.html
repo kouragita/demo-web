@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coffers Cafe - Menu</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add some CSS styles for the chatbox */
+        .chatbox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -22,40 +31,167 @@
     <section class="menu">
         <h2>Our Menu</h2>
 
-        <div class="coffee-item">
+        <div class="coffee-item" data-item="latte" data-price="4">
+            <img src="latte.jpg" alt="Latte">
+            <h3>Latte</h3>
+            <p>Espresso with a lot of steamed milk and a bit of foam.</p>
+            <p>Price: $4</p>
+        </div>
+
+        <div class="coffee-item" data-item="cappuccino" data-price="5">
             <img src="cappuccino.jpg" alt="Cappuccino">
             <h3>Cappuccino</h3>
             <p>A classic espresso coffee with steamed milk and foam.</p>
             <p>Price: $5</p>
         </div>
 
-        <div class="coffee-item">
-            <img src="latte.jpg" alt="Latte">
-            <h3>Latte</h3>
-            <p>Espresso with a lot of steamed milk and a bit of foam.</p>
-            <p>Price: $4</p>
-        </div>
-        
-         <div class="coffee-item">
+        <div class="coffee-item" data-item="burger" data-price="7">
             <img src="burger.jpg" alt="Burger">
             <h3>Burger</h3>
             <p>A delicious burger with all the fixings.</p>
             <p>Price: $7</p>
         </div>
 
-         <div class="coffee-item">
+        <div class="coffee-item" data-item="sausage" data-price="6">
             <img src="sausage.jpg" alt="Sausage">
             <h3>Sausage</h3>
             <p>Grilled sausage served with your choice of sides.</p>
             <p>Price: $6</p>
         </div>
-
-
-        
     </section>
+
+    <div class="chatbox">
+        <div id="messages"></div>
+        <input type="text" id="userInput" placeholder="Type your message...">
+        <button id="sendMessage">Send</button>
+    </div>
 
     <footer>
         <p>&copy; 2023 Coffers Cafe</p>
     </footer>
+
+    <script>
+         const chatbox = document.getElementById('messages');
+        const userInput = document.getElementById('userInput');
+        const sendMessage = document.getElementById('sendMessage');
+
+        const orders = [];
+        let currentItem = null;
+        let customerName = null;
+
+        function displayMessage(message, sender) {
+            const p = document.createElement('p');
+            p.textContent = `${sender}: ${message}`;
+            chatbox.appendChild(p);
+        }
+
+        sendMessage.addEventListener('click', () => {
+            const userMessage = userInput.value;
+            displayMessage(userMessage, "You");
+            processUserMessage(userMessage);
+            userInput.value = ''; // Clear the input
+        });
+
+        function processUserMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            if (!customerName) {
+                // If customerName is not set, expect the customer to provide their name
+                customerName = message;
+                displayMessage(`Hi, ${customerName}! I'm Chunkz, and welcome to Coffers Cafe. Here's our menu:`, "Chunkz");
+                // Display the menu
+                displayMenu();
+            } else if (lowerMessage === "no") {
+                displayOrderSummary();
+            } else if (lowerMessage === "hello") {
+                displayMessage(`Hi, ${customerName}! What would you like to order, please?`, "Chunkz");
+            } else if (lowerMessage === "menu") {
+                displayMenu();
+            } else if (itemExists(lowerMessage)) {
+                currentItem = {
+                    name: getItemName(lowerMessage),
+                    price: getItemPrice(lowerMessage),
+                    quantity: 0,
+                };
+                displayMessage(`You ordered ${currentItem.name}. How many would you like?`, "Chunkz");
+            } else if (currentItem) {
+                const quantity = parseInt(lowerMessage, 10);
+                if (!isNaN(quantity) && quantity > 0) {
+                    currentItem.quantity = quantity;
+                    orders.push(currentItem);
+                    displayMessage(`You ordered ${currentItem.quantity} ${currentItem.name}. Anything else?`, "Chunkz");
+                    currentItem = null; // Reset the current item
+                } else {
+                    displayMessage("I didn't understand the quantity. Please specify a valid number.", "Chunkz");
+                }
+            } else {
+                displayMessage("I'm sorry, we don't have that item on our menu. Please choose from the menu.", "Chunkz");
+            }
+        }
+
+        function displayMenu() {
+            // Display the menu items with prices
+            displayMessage("Here's our menu:", "Chunkz");
+            const menuItems = [
+                { name: "Cappuccino", price: "$5" },
+                { name: "Latte", price: "$4" },
+                { name: "Burger", price: "$7" },
+                { name: "Sausage", price: "$6" },
+            ];
+
+            menuItems.forEach((item) => {
+                displayMessage(`${item.name}: ${item.price}`, "Chunkz");
+            });
+            displayMessage("What would you like to order, please?", "Chunkz");
+        }
+
+        function itemExists(itemName) {
+            const items = [
+                "cappuccino",
+                "latte",
+                "burger",
+                "sausage",
+            ];
+            return items.includes(itemName);
+        }
+
+        function getItemName(itemName) {
+            const itemMap = {
+                "cappuccino": "Cappuccino",
+                "latte": "Latte",
+                "burger": "Burger",
+                "sausage": "Sausage",
+            };
+            return itemMap[itemName];
+        }
+
+        function getItemPrice(itemName) {
+            const priceMap = {
+                "cappuccino": "$5",
+                "latte": "$4",
+                "burger": "$7",
+                "sausage": "$6",
+            };
+            return priceMap[itemName];
+        }
+
+
+        function displayOrderSummary() {
+    if (orders.length === 0) {
+        displayMessage("You didn't order anything. Please let me know if you'd like something.", "Chunkz");
+    } else {
+        let total = 0;
+        displayMessage("Your order summary:", "Chunkz");
+        orders.forEach((order) => {
+            const price = parseFloat(order.price.slice(1)); // Parse the price, removing the dollar sign
+            total += price * order.quantity;
+            displayMessage(`${order.name} x${order.quantity}: $${(price * order.quantity).toFixed(2)}`, "Chunkz");
+        });
+        displayMessage(`Total: $${total.toFixed(2)}`, "Chunkz");
+        displayMessage(`Thank you, ${customerName}, for choosing Coffers Cafe!`, "Chunkz");
+        displayMessage("You're welcome to our shop anytime. Enjoy your meal!", "Chunkz");
+    }
+}
+
+    </script>
 </body>
 </html>
