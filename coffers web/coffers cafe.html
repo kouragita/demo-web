@@ -93,40 +93,40 @@
         });
 
         function processUserMessage(message) {
-            const lowerMessage = message.toLowerCase();
-            if (!customerName) {
-                // If customerName is not set, expect the customer to provide their name
-                customerName = message;
-                displayMessage(`Hi, ${customerName}! I'm Chunkz, and welcome to Coffers Cafe. Here's our menu:`, "Chunkz");
-                // Display the menu
-                displayMenu();
-            } else if (lowerMessage === "no") {
-                displayOrderSummary();
-            } else if (lowerMessage === "hello") {
-                displayMessage(`Hi, ${customerName}! What would you like to order, please?`, "Chunkz");
-            } else if (lowerMessage === "menu") {
-                displayMenu();
-            } else if (itemExists(lowerMessage)) {
-                currentItem = {
-                    name: getItemName(lowerMessage),
-                    price: getItemPrice(lowerMessage),
-                    quantity: 0,
-                };
-                displayMessage(`You ordered ${currentItem.name}. How many would you like?`, "Chunkz");
-            } else if (currentItem) {
-                const quantity = parseInt(lowerMessage, 10);
-                if (!isNaN(quantity) && quantity > 0) {
-                    currentItem.quantity = quantity;
-                    orders.push(currentItem);
-                    displayMessage(`You ordered ${currentItem.quantity} ${currentItem.name}. Anything else?`, "Chunkz");
-                    currentItem = null; // Reset the current item
-                } else {
-                    displayMessage("I didn't understand the quantity. Please specify a valid number.", "Chunkz");
-                }
-            } else {
-                displayMessage("I'm sorry, we don't have that item on our menu. Please choose from the menu.", "Chunkz");
-            }
+    const lowerMessage = message.toLowerCase();
+    if (!customerName) {
+        // If customerName is not set, expect the customer to provide their name
+        customerName = message;
+        displayMessage(`Hi, ${customerName}! I'm Chunkz, and welcome to Coffers Cafe. What would you like to order, please?`, "Chunkz");
+        // Display the menu
+        displayMenu();
+    } else if (lowerMessage === "no") {
+        displayOrderSummary();
+    } else if (lowerMessage === "yes") {
+        displayMessage("Great! What would you like to order next?", "Chunkz");
+    } else if (lowerMessage === "menu") {
+        displayMenu();
+    } else if (itemExists(lowerMessage)) {
+        currentItem = {
+            name: getItemName(lowerMessage),
+            price: getItemPrice(lowerMessage),
+            quantity: 0,
+        };
+        displayMessage(`You ordered ${currentItem.name}. How many would you like?`, "Chunkz");
+    } else if (currentItem) {
+        const quantity = parseInt(lowerMessage, 10);
+        if (!isNaN(quantity) && quantity > 0) {
+            currentItem.quantity = quantity;
+            orders.push(currentItem);
+            displayMessage(`You ordered ${currentItem.quantity} ${currentItem.name}. Anything else? (Type 'yes' or 'no')`, "Chunkz");
+            currentItem = null; // Reset the current item
+        } else {
+            displayMessage("I didn't understand the quantity. Please specify a valid number.", "Chunkz");
         }
+    } else {
+        displayMessage("I'm sorry, we don't have that item on our menu. Please choose from the menu.", "Chunkz");
+    }
+}
 
         function displayMenu() {
             // Display the menu items with prices
